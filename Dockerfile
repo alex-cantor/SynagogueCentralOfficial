@@ -23,11 +23,17 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd mbstring zip exif pcntl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Enable Apache modules
+RUN a2enmod rewrite
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy existing application directory contents
 COPY . /var/www/html
+
+# Copy the .env file
+COPY .env /var/www/html/.env
 
 # Set directory permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
