@@ -35,6 +35,10 @@ COPY . /var/www/html
 # Copy the .env file
 COPY .env /var/www/html/.env
 
+# Copy virtual host configuration and enable it
+COPY laravel.conf /etc/apache2/sites-available/000-default.conf
+RUN a2ensite 000-default.conf
+
 # Set directory permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
