@@ -19,7 +19,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     libonig-dev \
     libzip-dev \
-    php-pear \
     && docker-php-ext-configure gd \
     && docker-php-ext-install gd mbstring zip exif pcntl
 
