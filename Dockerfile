@@ -20,10 +20,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libzip-dev \
     && docker-php-ext-configure gd \
-    && docker-php-ext-install gd mbstring zip exif pcntl
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install gd mbstring zip exif pcntl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -31,11 +29,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy existing application directory contents
 COPY . /var/www/html
 
-# Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www/html
-
-# Change the owner of the directory to www-data
-RUN chown -R www-data:www-data /var/www/html
+# Set directory permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose port 80
 EXPOSE 80
